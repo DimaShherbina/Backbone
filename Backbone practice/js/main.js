@@ -32,10 +32,35 @@ var Person = Backbone.Model.extend({
 
 });
 
+var person = new Person();
+
+var PeopleCollection = Backbone.Collection.extend({
+	model: Person
+});
+
+var PeopleView = Backbone.View.extend({
+	tagName: 'ul',
+
+	initialize: function() {
+
+	},
+
+	render: function() {
+		this.collection.each(function(person) {
+			var personView = new PersonView({model: person});
+
+			this.$el.append(personView.render().el);
+		}, this);
+
+		return this;
+
+	}
+
+
+});
 
 var PersonView = Backbone.View.extend({
 	initialize: function() {
-		console.log('Class item creation complete');
 	},
 	tagName: 'li',
 
@@ -43,23 +68,32 @@ var PersonView = Backbone.View.extend({
 
 	render: function() {
 		this.$el.html( this.template( this.model.toJSON() ) );
+
+		return this;
 	}
 
 })
 
-var per = new Person;
-var perView = new PersonView({model: per});
 
 
-/* var Person = function(config) {
-	this.name = config.name;
-	this.age = config.age;
-	this.job = config.job;
-};
+var peopleCollection = new PeopleCollection([
+	{
+		name: 'Геннадий',
+		age: 40,
+		job: 'Unemployed'
+	},
+	{
+		name: 'Josh',
+		age: 32,
+		job: 'Crafter'
+	},
+	{
+		name: 'Julia',
+		job: 'Designer'
+	}
 
-Person.prototype.walk = function() {
-	return this.name + ' is walking';
-}
+	]);
 
-var Nick = new Person ( {name: 'Nick', age: '25', job: 'developer'} ); */
+var peopleView = new PeopleView({collection: peopleCollection})
 
+$(document.body).append(peopleView.render().el);
