@@ -1,4 +1,21 @@
-var Person = Backbone.Model.extend({
+(function() {
+	// пространство имён
+	window.App = {
+		Models: {},
+		Views: {},
+		Collections: {}
+	};
+
+
+
+// хэлпер шаблона
+var template = function(id) {
+	return _.template( $('#' + id).html() );
+};
+
+
+// Модель человека
+App.Models.Person = Backbone.Model.extend({
 	defaults: {
 		name: 'Dima',
 		age: 23,
@@ -32,13 +49,16 @@ var Person = Backbone.Model.extend({
 
 });
 
-var person = new Person();
+var person = new App.Models.Person();
 
-var PeopleCollection = Backbone.Collection.extend({
-	model: Person
+
+// Список людей
+App.Collections.People = Backbone.Collection.extend({
+	model: App.Models.Person
 });
 
-var PeopleView = Backbone.View.extend({
+// Вид списка людей
+App.Views.People = Backbone.View.extend({
 	tagName: 'ul',
 
 	initialize: function() {
@@ -47,7 +67,7 @@ var PeopleView = Backbone.View.extend({
 
 	render: function() {
 		this.collection.each(function(person) {
-			var personView = new PersonView({model: person});
+			var personView = new App.Views.Person({model: person});
 
 			this.$el.append(personView.render().el);
 		}, this);
@@ -59,12 +79,13 @@ var PeopleView = Backbone.View.extend({
 
 });
 
-var PersonView = Backbone.View.extend({
+// Вид одного человека
+App.Views.Person = Backbone.View.extend({
 	initialize: function() {
 	},
 	tagName: 'li',
 
-	template: _.template( $('#person-id').html() ),
+	template: template('person-id'),
 
 	render: function() {
 		this.$el.html( this.template( this.model.toJSON() ) );
@@ -76,7 +97,7 @@ var PersonView = Backbone.View.extend({
 
 
 
-var peopleCollection = new PeopleCollection([
+var peopleCollection = new App.Collections.People([
 	{
 		name: 'Геннадий',
 		age: 40,
@@ -90,10 +111,17 @@ var peopleCollection = new PeopleCollection([
 	{
 		name: 'Julia',
 		job: 'Designer'
+	},
+	{
+		name: 'Vasiliy',
+		age: 34,
+		job: 'Gladiator'
 	}
 
 	]);
 
-var peopleView = new PeopleView({collection: peopleCollection})
+var peopleView = new App.Views.People({collection: peopleCollection})
 
 $(document.body).append(peopleView.render().el);
+
+}());
