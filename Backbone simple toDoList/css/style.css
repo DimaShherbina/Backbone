@@ -1,0 +1,23 @@
+body {
+	margin: 0;
+}
+
+button {
+	margin: 0 0 5px 10px;
+}
+
+.wrapper {
+	display: flex;
+	justify-content: center;
+	max-width: 1000px;
+	margin: 0 auto 0 auto;
+}
+
+.toDoList {
+	padding: 15px;
+}
+
+h1 {
+	text-align: center;
+}
+
